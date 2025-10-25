@@ -1,37 +1,1368 @@
-# Compiled source #
-###################
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>军区角色扮演 - Roblox游戏</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP 动画库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <!-- ScrollTrigger 插件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'military-green': '#2D3E40',
+                        'military-dark': '#1E292B',
+                        'military-light': '#596B6C',
+                        'accent-orange': '#FF6B35',
+                        'accent-yellow': '#F7B32B',
+                    },
+                    fontFamily: {
+                        'military': ['Rajdhani', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #1E292B;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .hero-section {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/20f21b0009934a6eb80d6eb19170383b~tplv-a9rns2rl98-image.image?rcl=20251025141032985843957C4021DDAB92&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763964657&x-signature=VoLNkHtKgWZLr0h5J3XRYNiE6qo%3D');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: #FF6B35;
+            margin: 15px auto 0;
+        }
+        
+        .feature-card {
+            background-color: rgba(45, 62, 64, 0.8);
+            border-left: 4px solid #FF6B35;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .character-card {
+            background-color: rgba(45, 62, 64, 0.8);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .character-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .equipment-card {
+            background-color: rgba(45, 62, 64, 0.8);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .equipment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .equipment-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .equipment-card:hover::after {
+            opacity: 1;
+        }
+        
+        .news-card {
+            background-color: rgba(45, 62, 64, 0.8);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .btn-primary {
+            background-color: #FF6B35;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background-color: #e55a2a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid #FF6B35;
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 107, 53, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-link {
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #FF6B35;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        #character-canvas {
+            width: 100%;
+            height: 400px;
+            background-color: rgba(45, 62, 64, 0.3);
+            border-radius: 8px;
+        }
+        
+        .customization-option {
+            background-color: rgba(45, 62, 64, 0.8);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .customization-option:hover {
+            background-color: rgba(45, 62, 64, 1);
+            transform: translateY(-3px);
+        }
+        
+        .customization-option.active {
+            border: 2px solid #FF6B35;
+        }
+        
+        .rank-badge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto;
+            border: 2px solid white;
+        }
+        
+        .rank-badge.bronze {
+            background-color: #CD7F32;
+        }
+        
+        .rank-badge.silver {
+            background-color: #C0C0C0;
+        }
+        
+        .rank-badge.gold {
+            background-color: #FFD700;
+            color: #333;
+        }
+        
+        .rank-badge.platinum {
+            background-color: #E5E4E2;
+            color: #333;
+        }
+        
+        .rank-badge.diamond {
+            background-color: #B9F2FF;
+            color: #333;
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-20px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-10px) translateX(-50%);
+            }
+        }
+        
+        .count-animation {
+            font-weight: bold;
+            font-size: 2.5rem;
+            color: #FF6B35;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(45, 62, 64, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: #FF6B35;
+            transform: translateY(-3px);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero-section {
+                height: auto;
+                padding: 100px 0;
+            }
+            
+            .section-title::after {
+                margin: 10px auto 0;
+            }
+            
+            .count-animation {
+                font-size: 2rem;
+            }
+        }
+        
+        /* 加载动画 */
+        .loader {
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            background: #1E292B;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loader-circle {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(45, 62, 64, 0.5);
+            border-top: 5px solid #FF6B35;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 军事风格滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1E292B;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #596B6C;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF6B35;
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loader">
+        <div class="loader-circle"></div>
+    </div>
 
-# Packages #
-############
-# it's better to unpack these files and commit the raw source
-# git has its own built in compression methods
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
+    <!-- 导航栏 -->
+    <nav class="bg-military-dark fixed w-full z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt text-accent-orange text-3xl mr-3"></i>
+                    <span class="text-2xl font-bold text-white">军区角色扮演</span>
+                </div>
+                
+                <!-- 桌面导航 -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link active">首页</a>
+                    <a href="#features" class="nav-link">游戏特色</a>
+                    <a href="#characters" class="nav-link">角色系统</a>
+                    <a href="#equipment" class="nav-link">装备系统</a>
+                    <a href="#community" class="nav-link">社区互动</a>
+                    <a href="#customize" class="nav-link">角色定制</a>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <div class="md:hidden">
+                    <button id="menu-toggle" class="text-white focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Roblox 按钮 -->
+                <div class="hidden md:block">
+                    <a href="#" class="btn-primary flex items-center">
+                        <i class="fab fa-roblox mr-2"></i>
+                        开始游戏
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 移动端导航菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden pt-4 pb-2">
+                <a href="#home" class="block py-2 text-white hover:text-accent-orange">首页</a>
+                <a href="#features" class="block py-2 text-white hover:text-accent-orange">游戏特色</a>
+                <a href="#characters" class="block py-2 text-white hover:text-accent-orange">角色系统</a>
+                <a href="#equipment" class="block py-2 text-white hover:text-accent-orange">装备系统</a>
+                <a href="#community" class="block py-2 text-white hover:text-accent-orange">社区互动</a>
+                <a href="#customize" class="block py-2 text-white hover:text-accent-orange">角色定制</a>
+                <a href="#" class="block py-2 mt-2 text-accent-orange font-bold">
+                    <i class="fab fa-roblox mr-2"></i>
+                    开始游戏
+                </a>
+            </div>
+        </div>
+    </nav>
 
-# Logs and databases #
-######################
-*.log
-*.sql
-*.sqlite
+    <!-- 首屏英雄区 -->
+    <section id="home" class="hero-section flex items-center justify-center relative">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 text-white">军区角色扮演</h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">体验真实的军事生活，完成各种任务，提升军衔，解锁装备，成为最强战士！</p>
+            <div class="flex flex-col md:flex-row justify-center gap-4">
+                <a href="#" class="btn-primary text-lg">
+                    <i class="fab fa-roblox mr-2"></i>
+                    立即加入
+                </a>
+                <a href="#features" class="btn-secondary text-lg">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    了解更多
+                </a>
+            </div>
+        </div>
+        
+        <!-- 滚动指示器 -->
+        <div class="scroll-indicator">
+            <i class="fas fa-chevron-down text-2xl text-accent-orange"></i>
+        </div>
+    </section>
 
-# OS generated files #
-######################
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+    <!-- 游戏数据统计 -->
+    <section class="py-16 bg-military-dark">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="count-animation" data-target="50000">0</div>
+                    <p class="text-gray-300 mt-2">活跃玩家</p>
+                </div>
+                <div>
+                    <div class="count-animation" data-target="120">0</div>
+                    <p class="text-gray-300 mt-2">游戏任务</p>
+                </div>
+                <div>
+                    <div class="count-animation" data-target="50">0</div>
+                    <p class="text-gray-300 mt-2">武器装备</p>
+                </div>
+                <div>
+                    <div class="count-animation" data-target="15">0</div>
+                    <p class="text-gray-300 mt-2">军衔等级</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 游戏特色 -->
+    <section id="features" class="py-20 bg-military-green">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 section-title">游戏特色</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- 特色1 -->
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="text-accent-orange text-4xl mb-4">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">多样化地图</h3>
+                    <p class="text-gray-300">从城市战场到丛林营地，从沙漠基地到雪地哨所，多种环境地图任你探索。</p>
+                </div>
+                
+                <!-- 特色2 -->
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="text-accent-orange text-4xl mb-4">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">丰富任务系统</h3>
+                    <p class="text-gray-300">执行各种军事任务，包括侦察、突袭、保卫、救援等，完成任务获得奖励。</p>
+                </div>
+                
+                <!-- 特色3 -->
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="text-accent-orange text-4xl mb-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">团队协作</h3>
+                    <p class="text-gray-300">与其他玩家组队，制定战术，协同作战，体验真实的军事团队合作。</p>
+                </div>
+                
+                <!-- 特色4 -->
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="text-accent-orange text-4xl mb-4">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">军衔系统</h3>
+                    <p class="text-gray-300">从列兵开始，通过完成任务和提升技能，逐步晋升到将军级别。</p>
+                </div>
+                
+                <!-- 特色5 -->
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="text-accent-orange text-4xl mb-4">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">装备商店</h3>
+                    <p class="text-gray-300">使用游戏币购买各种武器、装备和服装，自定义你的角色外观和能力。</p>
+                </div>
+                
+                <!-- 特色6 -->
+                <div class="feature-card p-6 rounded-lg">
+                    <div class="text-accent-orange text-4xl mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">技能提升</h3>
+                    <p class="text-gray-300">通过训练和实战提升各种技能，包括射击、格斗、驾驶、医疗等。</p>
+                </div>
+            </div>
+            
+            <!-- 游戏预告片 -->
+            <div class="mt-20 text-center">
+                <h3 class="text-2xl font-bold mb-6">游戏预告片</h3>
+                <div class="relative mx-auto max-w-4xl rounded-lg overflow-hidden shadow-2xl">
+                    <div class="aspect-w-16 aspect-h-9 bg-black">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/20f21b0009934a6eb80d6eb19170383b~tplv-a9rns2rl98-image.image?rcl=20251025141032985843957C4021DDAB92&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763964657&x-signature=VoLNkHtKgWZLr0h5J3XRYNiE6qo%3D" alt="游戏预告片" class="w-full h-full object-cover opacity-80">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <button class="w-20 h-20 rounded-full bg-accent-orange bg-opacity-80 flex items-center justify-center hover:bg-opacity-100 transition-all duration-300">
+                                <i class="fas fa-play text-white text-3xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 角色系统 -->
+    <section id="characters" class="py-20 bg-military-dark">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 section-title">角色系统</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 角色1 -->
+                <div class="character-card">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/1c594ac2ea314703a98d3d8727f8df8d~tplv-a9rns2rl98-image.image?rcl=20251025141032985843957C4021DDAB92&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763964655&x-signature=0HMWQODR%2BRYLKbc1TGZV5oqLkh0%3D" alt="步兵" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">步兵</h3>
+                        <p class="text-gray-300 mb-4">战场上的主力部队，擅长各种地形作战，装备齐全，适应性强。</p>
+                        <div class="flex justify-between items-center">
+                            <div class="rank-badge bronze">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <span class="text-sm text-gray-400">解锁等级: 1</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 角色2 -->
+                <div class="character-card">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1844798611035914264~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776924641&x-signature=CC5KTiz4kuZia%2FMoivWfkMZ55ac%3D" alt="特种兵" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">特种兵</h3>
+                        <p class="text-gray-300 mb-4">执行特殊任务的精英部队，擅长潜入、侦察和突袭，装备精良。</p>
+                        <div class="flex justify-between items-center">
+                            <div class="rank-badge silver">
+                                <i class="fas fa-crosshairs"></i>
+                            </div>
+                            <span class="text-sm text-gray-400">解锁等级: 5</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 角色3 -->
+                <div class="character-card">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1844616032006307852~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776924641&x-signature=CCPrUOEKuVxz3N%2B7ALrIAyHyCmE%3D" alt="医护兵" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">医护兵</h3>
+                        <p class="text-gray-300 mb-4">战场上的医疗支援，擅长治疗伤员，提高团队生存能力。</p>
+                        <div class="flex justify-between items-center">
+                            <div class="rank-badge gold">
+                                <i class="fas fa-medkit"></i>
+                            </div>
+                            <span class="text-sm text-gray-400">解锁等级: 10</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 军衔系统 -->
+            <div class="mt-20">
+                <h3 class="text-2xl font-bold text-center mb-10">军衔系统</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge bronze mx-auto mb-3">1</div>
+                        <h4 class="font-bold">列兵</h4>
+                    </div>
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge bronze mx-auto mb-3">2</div>
+                        <h4 class="font-bold">上等兵</h4>
+                    </div>
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge silver mx-auto mb-3">3</div>
+                        <h4 class="font-bold">下士</h4>
+                    </div>
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge silver mx-auto mb-3">4</div>
+                        <h4 class="font-bold">中士</h4>
+                    </div>
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge gold mx-auto mb-3">5</div>
+                        <h4 class="font-bold">上士</h4>
+                    </div>
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge gold mx-auto mb-3">6</div>
+                        <h4 class="font-bold">少尉</h4>
+                    </div>
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge gold mx-auto mb-3">7</div>
+                        <h4 class="font-bold">中尉</h4>
+                    </div>
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge platinum mx-auto mb-3">8</div>
+                        <h4 class="font-bold">上尉</h4>
+                    </div>
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge platinum mx-auto mb-3">9</div>
+                        <h4 class="font-bold">少校</h4>
+                    </div>
+                    <div class="text-center p-4 bg-military-green rounded-lg">
+                        <div class="rank-badge diamond mx-auto mb-3">10</div>
+                        <h4 class="font-bold">将军</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 装备系统 -->
+    <section id="equipment" class="py-20 bg-military-green">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 section-title">装备系统</h2>
+            
+            <!-- 装备分类标签 -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button class="btn-primary equipment-filter active" data-filter="all">全部装备</button>
+                <button class="btn-secondary equipment-filter" data-filter="weapon">武器</button>
+                <button class="btn-secondary equipment-filter" data-filter="armor">防具</button>
+                <button class="btn-secondary equipment-filter" data-filter="vehicle">载具</button>
+            </div>
+            
+            <!-- 装备展示 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 装备1 -->
+                <div class="equipment-card" data-category="weapon">
+                    <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-xv4ileqgde/975702373337416faa0a27f1a4d85dfe~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776924641&x-signature=ahtkQPpCP0GtwjT%2BPUc88mFFs0M%3D" alt="突击步枪" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">突击步枪</h3>
+                        <p class="text-gray-300 mb-4">多功能自动步枪，适合中近距离作战，射速快，稳定性好。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent-orange font-bold">5000 游戏币</span>
+                            <button class="btn-primary py-1 px-4">
+                                <i class="fas fa-shopping-cart mr-1"></i>
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 装备2 -->
+                <div class="equipment-card" data-category="weapon">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/915106768891674625~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776924641&x-signature=BwJXpj5see1DWJ8sZlzKfaZVwDo%3D" alt="狙击步枪" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">狙击步枪</h3>
+                        <p class="text-gray-300 mb-4">高精度远距离武器，适合狙击任务，伤害高，射程远。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent-orange font-bold">8000 游戏币</span>
+                            <button class="btn-primary py-1 px-4">
+                                <i class="fas fa-shopping-cart mr-1"></i>
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 装备3 -->
+                <div class="equipment-card" data-category="armor">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1844538000943611905~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776924641&x-signature=LjmLfzvm37CzR8dRrLxS1L1BPqo%3D" alt="战术背心" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">战术背心</h3>
+                        <p class="text-gray-300 mb-4">提供额外防护和装备携带空间，减少伤害，增加负重能力。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent-orange font-bold">3000 游戏币</span>
+                            <button class="btn-primary py-1 px-4">
+                                <i class="fas fa-shopping-cart mr-1"></i>
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 装备4 -->
+                <div class="equipment-card" data-category="vehicle">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/20f21b0009934a6eb80d6eb19170383b~tplv-a9rns2rl98-image.image?rcl=20251025141032985843957C4021DDAB92&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763964657&x-signature=VoLNkHtKgWZLr0h5J3XRYNiE6qo%3D" alt="军用吉普" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">军用吉普</h3>
+                        <p class="text-gray-300 mb-4">快速机动载具，适合快速部署和撤离，可搭载4名士兵。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent-orange font-bold">15000 游戏币</span>
+                            <button class="btn-primary py-1 px-4">
+                                <i class="fas fa-shopping-cart mr-1"></i>
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 装备5 -->
+                <div class="equipment-card" data-category="vehicle">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1905680107423268883~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776924641&x-signature=6hHmsRv723vzQ010eqS02vr6OjI%3D" alt="坦克" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">坦克</h3>
+                        <p class="text-gray-300 mb-4">重型装甲载具，拥有强大的火力和防护，适合正面作战。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent-orange font-bold">50000 游戏币</span>
+                            <button class="btn-primary py-1 px-4">
+                                <i class="fas fa-shopping-cart mr-1"></i>
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 装备6 -->
+                <div class="equipment-card" data-category="armor">
+                    <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1844798611035914264~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776924641&x-signature=CC5KTiz4kuZia%2FMoivWfkMZ55ac%3D" alt="头盔" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">战术头盔</h3>
+                        <p class="text-gray-300 mb-4">保护头部免受伤害，部分型号配备夜视仪和通讯设备。</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-accent-orange font-bold">2000 游戏币</span>
+                            <button class="btn-primary py-1 px-4">
+                                <i class="fas fa-shopping-cart mr-1"></i>
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 社区互动 -->
+    <section id="community" class="py-20 bg-military-dark">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 section-title">社区互动</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 最新公告 -->
+                <div class="lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-6">最新公告</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- 公告1 -->
+                        <div class="news-card p-6">
+                            <div class="flex items-start">
+                                <div class="bg-accent-orange text-white p-3 rounded-lg mr-4">
+                                    <span class="block text-center font-bold">15</span>
+                                    <span class="block text-center text-sm">6月</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">游戏更新：新增沙漠地图和武器系统</h4>
+                                    <p class="text-gray-300 mb-3">本次更新将带来全新的沙漠作战地图和三种新式武器，同时优化了游戏性能和任务系统。</p>
+                                    <a href="#" class="text-accent-orange hover:underline flex items-center">
+                                        阅读更多
+                                        <i class="fas fa-arrow-right ml-2"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 公告2 -->
+                        <div class="news-card p-6">
+                            <div class="flex items-start">
+                                <div class="bg-accent-orange text-white p-3 rounded-lg mr-4">
+                                    <span class="block text-center font-bold">10</span>
+                                    <span class="block text-center text-sm">6月</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">端午节活动：完成任务赢取限定装备</h4>
+                                    <p class="text-gray-300 mb-3">端午节期间将开启限时活动，完成指定任务可获得端午节限定武器皮肤和角色服装。</p>
+                                    <a href="#" class="text-accent-orange hover:underline flex items-center">
+                                        阅读更多
+                                        <i class="fas fa-arrow-right ml-2"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 公告3 -->
+                        <div class="news-card p-6">
+                            <div class="flex items-start">
+                                <div class="bg-accent-orange text-white p-3 rounded-lg mr-4">
+                                    <span class="block text-center font-bold">05</span>
+                                    <span class="block text-center text-sm">6月</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">玩家问卷调查：帮助我们改进游戏</h4>
+                                    <p class="text-gray-300 mb-3">填写问卷调查，分享你的游戏体验和建议，即可获得游戏币奖励和独家道具。</p>
+                                    <a href="#" class="text-accent-orange hover:underline flex items-center">
+                                        参与调查
+                                        <i class="fas fa-arrow-right ml-2"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 text-center">
+                        <a href="#" class="btn-secondary">
+                            查看更多公告
+                            <i class="fas fa-chevron-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 玩家反馈 -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">玩家反馈</h3>
+                    
+                    <div class="bg-military-green p-6 rounded-lg mb-6">
+                        <h4 class="text-xl font-bold mb-4">提交反馈</h4>
+                        <form>
+                            <div class="mb-4">
+                                <label class="block text-gray-300 mb-2">反馈类型</label>
+                                <select class="w-full bg-military-dark text-white p-3 rounded-lg border border-military-light focus:outline-none focus:border-accent-orange">
+                                    <option>bug报告</option>
+                                    <option>功能建议</option>
+                                    <option>平衡性反馈</option>
+                                    <option>其他</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-300 mb-2">反馈内容</label>
+                                <textarea class="w-full bg-military-dark text-white p-3 rounded-lg border border-military-light focus:outline-none focus:border-accent-orange h-32" placeholder="请详细描述你的反馈..."></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary w-full">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                提交反馈
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- 社区链接 -->
+                    <div>
+                        <h4 class="text-xl font-bold mb-4">社区链接</h4>
+                        <div class="flex flex-wrap">
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-discord text-white"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-twitter text-white"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-instagram text-white"></i>
+                            </a>
+                            <a href="#" class="social-icon">
+                                <i class="fab fa-youtube text-white"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h4 class="text-xl font-bold mb-4">加入我们</h4>
+                            <p class="text-gray-300 mb-4">加入官方Discord服务器，获取最新资讯，与其他玩家交流，参与活动。</p>
+                            <a href="#" class="btn-primary w-full flex items-center justify-center">
+                                <i class="fab fa-discord mr-2"></i>
+                                加入Discord
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 角色定制模拟器 -->
+    <section id="customize" class="py-20 bg-military-green">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-16 section-title">AI角色定制模拟器</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- 角色预览 -->
+                <div class="lg:col-span-2">
+                    <div class="bg-military-dark p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-6">角色预览</h3>
+                        <div id="character-canvas" class="relative">
+                            <!-- Three.js 渲染区域 -->
+                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/1c594ac2ea314703a98d3d8727f8df8d~tplv-a9rns2rl98-image.image?rcl=20251025141032985843957C4021DDAB92&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763964655&x-signature=0HMWQODR%2BRYLKbc1TGZV5oqLkh0%3D" alt="角色预览" class="w-full h-full object-contain">
+                            
+                            <!-- 角色信息 -->
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
+                                <h4 class="text-xl font-bold">士兵 #12345</h4>
+                                <div class="flex items-center mt-2">
+                                    <div class="rank-badge bronze mr-3">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <span>列兵</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 flex justify-between">
+                            <button class="btn-secondary">
+                                <i class="fas fa-random mr-2"></i>
+                                随机生成
+                            </button>
+                            <button class="btn-primary">
+                                <i class="fas fa-download mr-2"></i>
+                                保存角色
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 定制选项 -->
+                <div>
+                    <div class="bg-military-dark p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-6">定制选项</h3>
+                        
+                        <!-- 角色类型 -->
+                        <div class="mb-6">
+                            <h4 class="text-lg font-bold mb-3">角色类型</h4>
+                            <div class="space-y-3">
+                                <div class="customization-option active">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-shield-alt text-accent-orange mr-3"></i>
+                                        <span>步兵</span>
+                                    </div>
+                                </div>
+                                <div class="customization-option">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-crosshairs text-accent-orange mr-3"></i>
+                                        <span>特种兵</span>
+                                    </div>
+                                </div>
+                                <div class="customization-option">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-medkit text-accent-orange mr-3"></i>
+                                        <span>医护兵</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 服装颜色 -->
+                        <div class="mb-6">
+                            <h4 class="text-lg font-bold mb-3">服装颜色</h4>
+                            <div class="grid grid-cols-4 gap-3">
+                                <div class="w-full aspect-square bg-green-800 rounded-full cursor-pointer border-2 border-accent-orange"></div>
+                                <div class="w-full aspect-square bg-blue-900 rounded-full cursor-pointer"></div>
+                                <div class="w-full aspect-square bg-yellow-800 rounded-full cursor-pointer"></div>
+                                <div class="w-full aspect-square bg-gray-700 rounded-full cursor-pointer"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 武器选择 -->
+                        <div class="mb-6">
+                            <h4 class="text-lg font-bold mb-3">武器选择</h4>
+                            <div class="space-y-3">
+                                <div class="customization-option active">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-gun text-accent-orange mr-3"></i>
+                                        <span>突击步枪</span>
+                                    </div>
+                                </div>
+                                <div class="customization-option">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-crosshairs text-accent-orange mr-3"></i>
+                                        <span>狙击步枪</span>
+                                    </div>
+                                </div>
+                                <div class="customization-option">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-bomb text-accent-orange mr-3"></i>
+                                        <span>火箭筒</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 装备选择 -->
+                        <div>
+                            <h4 class="text-lg font-bold mb-3">装备选择</h4>
+                            <div class="space-y-3">
+                                <div class="customization-option active">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-vest text-accent-orange mr-3"></i>
+                                        <span>战术背心</span>
+                                    </div>
+                                </div>
+                                <div class="customization-option">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-helmet-battle text-accent-orange mr-3"></i>
+                                        <span>战术头盔</span>
+                                    </div>
+                                </div>
+                                <div class="customization-option">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-binoculars text-accent-orange mr-3"></i>
+                                        <span>望远镜</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 游戏下载/加入 -->
+    <section class="py-20 bg-military-dark relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/963809224124923915~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1776924641&x-signature=AzXquN0MSInsdcPVLlGbTcrwGUU%3D" alt="背景" class="w-full h-full object-cover">
+        </div>
+        
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center max-w-3xl mx-auto">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6">准备好加入战斗了吗？</h2>
+                <p class="text-xl mb-8">立即加入军区角色扮演游戏，体验真实的军事生活，与其他玩家一起完成各种任务，提升军衔，解锁装备！</p>
+                <div class="flex flex-col md:flex-row justify-center gap-4">
+                    <a href="#" class="btn-primary text-lg">
+                        <i class="fab fa-roblox mr-2"></i>
+                        立即加入
+                    </a>
+                    <a href="#" class="btn-secondary text-lg">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        查看游戏指南
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-military-dark py-12 border-t border-military-light">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- 游戏信息 -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-shield-alt text-accent-orange text-3xl mr-3"></i>
+                        <span class="text-2xl font-bold text-white">军区角色扮演</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">体验真实的军事生活，完成各种任务，提升军衔，解锁装备，成为最强战士！</p>
+                    <div class="flex">
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-discord text-white"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-twitter text-white"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-instagram text-white"></i>
+                        </a>
+                        <a href="#" class="social-icon">
+                            <i class="fab fa-youtube text-white"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">快速链接</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-accent-orange">首页</a></li>
+                        <li><a href="#features" class="text-gray-400 hover:text-accent-orange">游戏特色</a></li>
+                        <li><a href="#characters" class="text-gray-400 hover:text-accent-orange">角色系统</a></li>
+                        <li><a href="#equipment" class="text-gray-400 hover:text-accent-orange">装备系统</a></li>
+                        <li><a href="#community" class="text-gray-400 hover:text-accent-orange">社区互动</a></li>
+                        <li><a href="#customize" class="text-gray-400 hover:text-accent-orange">角色定制</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 游戏资源 -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">游戏资源</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-accent-orange">游戏指南</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-accent-orange">常见问题</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-accent-orange">更新日志</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-accent-orange">开发者日志</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-accent-orange">反馈建议</a></li>
+                    </ul>
+                </div>
+                
+                <!-- 联系我们 -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4">联系我们</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-accent-orange mr-2"></i>
+                            <a href="mailto:contact@militaryrp.com" class="text-gray-400 hover:text-accent-orange">contact@militaryrp.com</a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-accent-orange mr-2"></i>
+                            <span class="text-gray-400">Roblox Studio</span>
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-6">
+                        <h4 class="text-lg font-bold mb-3">订阅更新</h4>
+                        <form class="flex">
+                            <input type="email" placeholder="你的邮箱地址" class="bg-military-green text-white p-2 rounded-l-lg border-0 focus:outline-none focus:ring-2 focus:ring-accent-orange flex-grow">
+                            <button type="submit" class="bg-accent-orange text-white p-2 rounded-r-lg hover:bg-opacity-90 transition-all">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-military-light mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 军区角色扮演. 保留所有权利.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-accent-orange">隐私政策</a>
+                    <a href="#" class="text-gray-400 hover:text-accent-orange">服务条款</a>
+                    <a href="#" class="text-gray-400 hover:text-accent-orange">Cookie 政策</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-accent-orange text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all duration-300">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载动画
+            setTimeout(function() {
+                document.querySelector('.loader').classList.add('hidden');
+            }, 1000);
+            
+            // 移动端菜单切换
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            menuToggle.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // 如果是移动端，点击后关闭菜单
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+            
+            // 返回顶部按钮
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.remove('opacity-0', 'invisible');
+                    backToTopButton.classList.add('opacity-100', 'visible');
+                } else {
+                    backToTopButton.classList.remove('opacity-100', 'visible');
+                    backToTopButton.classList.add('opacity-0', 'invisible');
+                }
+            });
+            
+            backToTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // 装备筛选
+            const filterButtons = document.querySelectorAll('.equipment-filter');
+            const equipmentCards = document.querySelectorAll('.equipment-card');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('btn-primary');
+                        btn.classList.add('btn-secondary');
+                        btn.classList.remove('active');
+                    });
+                    
+                    // 添加当前按钮的active类
+                    this.classList.remove('btn-secondary');
+                    this.classList.add('btn-primary');
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // 筛选装备卡片
+                    equipmentCards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // 定制选项切换
+            const customizationOptions = document.querySelectorAll('.customization-option');
+            
+            customizationOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 找到同组的所有选项
+                    const parent = this.parentElement;
+                    const siblings = parent.querySelectorAll('.customization-option');
+                    
+                    // 移除同组所有选项的active类
+                    siblings.forEach(sibling => {
+                        sibling.classList.remove('active');
+                    });
+                    
+                    // 添加当前选项的active类
+                    this.classList.add('active');
+                });
+            });
+            
+            // 数字增长动画
+            const countElements = document.querySelectorAll('.count-animation');
+            
+            function animateCount(element) {
+                const target = parseInt(element.getAttribute('data-target'));
+                const duration = 2000; // 动画持续时间（毫秒）
+                const frameRate = 30; // 每秒帧数
+                const totalFrames = duration / (1000 / frameRate);
+                const increment = target / totalFrames;
+                
+                let current = 0;
+                const timer = setInterval(() => {
+                    current += increment;
+                    element.textContent = Math.floor(current);
+                    
+                    if (current >= target) {
+                        element.textContent = target;
+                        clearInterval(timer);
+                    }
+                }, 1000 / frameRate);
+            }
+            
+            // 使用Intersection Observer检测元素是否可见
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateCount(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            countElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // 初始化Three.js场景（简化版）
+            function initThreeJS() {
+                // 这里是简化版的Three.js初始化代码
+                // 实际项目中可以添加更复杂的3D模型和交互
+                console.log('Three.js initialized');
+            }
+            
+            // 尝试初始化Three.js
+            try {
+                initThreeJS();
+            } catch (error) {
+                console.error('Three.js initialization failed:', error);
+            }
+            
+            // 滚动动画
+            if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+                // 注册ScrollTrigger插件
+                gsap.registerPlugin(ScrollTrigger);
+                
+                // 特性卡片动画
+                gsap.utils.toArray('.feature-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        y: 50,
+                        opacity: 0,
+                        duration: 0.8,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top bottom-=100',
+                            toggleActions: 'play none none none'
+                        },
+                        delay: i * 0.1
+                    });
+                });
+                
+                // 角色卡片动画
+                gsap.utils.toArray('.character-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        x: i % 2 === 0 ? -50 : 50,
+                        opacity: 0,
+                        duration: 0.8,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top bottom-=100',
+                            toggleActions: 'play none none none'
+                        }
+                    });
+                });
+                
+                // 装备卡片动画
+                gsap.utils.toArray('.equipment-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        scale: 0.8,
+                        opacity: 0,
+                        duration: 0.6,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top bottom-=100',
+                            toggleActions: 'play none none none'
+                        },
+                        delay: i * 0.1
+                    });
+                });
+                
+                // 新闻卡片动画
+                gsap.utils.toArray('.news-card').forEach((card, i) => {
+                    gsap.from(card, {
+                        y: 30,
+                        opacity: 0,
+                        duration: 0.6,
+                        scrollTrigger: {
+                            trigger: card,
+                            start: 'top bottom-=100',
+                            toggleActions: 'play none none none'
+                        },
+                        delay: i * 0.2
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
